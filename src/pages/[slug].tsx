@@ -1,14 +1,11 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
-import superjson from "superjson";
 import { PageLayout } from "~/components/layout";
 import Image from "next/image";
 import { LoadingPage } from "~/components/loading";
 import { PostView } from "~/components/postview";
+import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 // imports ---------------------------
 
 const ProfileFeed = (props: { userId: string }) => {
@@ -61,12 +58,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
 export const getStaticProps: GetStaticProps = async (context) => {
   // createProxySSGHelpers by tRPC allows us to prefetch the username from the slug
   // for correct META DATA
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
-
+  const ssg = generateSSGHelper();
   const slug = context.params?.slug;
   if (typeof slug !== "string") throw new Error("no slug");
   const username = slug.replace("@", "");
