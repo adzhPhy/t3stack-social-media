@@ -3,21 +3,24 @@ name: CI
 on: [push, pull_request]
 
 env:
-   DATABASE_URL: "https://fake.com"
+  DATABASE_URL: "https://fake.com"
 
 jobs:
   build:
-    runs-on;: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
-      -name: Checkout
-       uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-       -name: Install Dependencies
-       uses: npm install
+      - name: Install Dependencies
+        run: npm install
 
-       -name: Typecheck
-       uses: npm run typecheck
+      - name: Typecheck
+        run: npm run typecheck
 
-       -name: Lint
-       uses: npm run lint
+      - name: Lint
+        run: npm run lint
+
+      - name: Print Environment Variable
+        run: echo $MY_ENV_VAR
